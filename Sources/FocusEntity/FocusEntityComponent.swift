@@ -7,9 +7,7 @@
 //
 
 import RealityKit
-#if !os(macOS)
 import ARKit
-#endif
 
 @available(iOS 13.0, *)
 internal struct ClassicStyle {
@@ -74,9 +72,7 @@ public struct FocusEntityComponent: Component {
     )
     internal var isOpen = true
     internal var segments: [FocusEntity.Segment] = []
-    #if !os(macOS)
     public var allowedRaycast: ARRaycastQuery.Target = .estimatedPlane
-    #endif
 
     static var defaultPlane = MeshResource.generatePlane(
         width: 0.1, depth: 0.1
@@ -86,11 +82,9 @@ public struct FocusEntityComponent: Component {
         self.style = style
         // If the device has LiDAR, then default behaviour is to only allow
         // existing detected planes
-        #if !os(macOS)
         if #available(iOS 13.4, *),
            ARWorldTrackingConfiguration.supportsSceneReconstruction(.mesh) {
             self.allowedRaycast = .existingPlaneGeometry
         }
-        #endif
     }
 }
