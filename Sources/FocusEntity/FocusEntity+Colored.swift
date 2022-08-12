@@ -6,10 +6,10 @@
 //  Copyright © 2019 Max Cobb. All rights reserved.
 //
 
-#if canImport(ARKit) && !targetEnvironment(simulator)
 import RealityKit
 
 /// An extension of FocusEntity holding the methods for the "colored" style.
+@available(iOS 13.0, *)
 public extension FocusEntity {
 
     internal func coloredStateChanged() {
@@ -42,4 +42,3 @@ public extension FocusEntity {
         self.fillPlane?.model?.materials[0] = modelMaterial
     }
 }
-#endif

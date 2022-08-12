@@ -9,12 +9,14 @@
 import SwiftUI
 import RealityKit
 
+@available(iOS 13.0, *)
 struct ContentView: View {
   var body: some View {
     ARViewContainer().edgesIgnoringSafeArea(.all)
   }
 }
 
+@available(iOS 13.0, *)
 struct ARViewContainer: UIViewRepresentable {
 
   func makeUIView(context: Context) -> FocusARView {
@@ -26,6 +28,7 @@ struct ARViewContainer: UIViewRepresentable {
 }
 
 #if DEBUG
+@available(iOS 13.0, *)
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
     ContentView()

@@ -11,6 +11,7 @@ import FocusEntity
 import Combine
 import ARKit
 
+@available(iOS 13.0, *)
 class FocusARView: ARView {
   enum FocusStyleChoices {
     case classic
@@ -60,6 +61,7 @@ class FocusARView: ARView {
   }
 }
 
+@available(iOS 13.0, *)
 extension FocusARView: FocusEntityDelegate {
   func toTrackingState() {
     print("tracking")

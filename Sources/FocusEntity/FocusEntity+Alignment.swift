@@ -6,11 +6,11 @@
 //  Copyright © 2019 Max Cobb. All rights reserved.
 //
 
-#if canImport(ARKit) && !targetEnvironment(simulator)
 import RealityKit
 import ARKit
 import Combine
 
+@available(iOS 13.0, *)
 extension FocusEntity {
 
     // MARK: Helper Methods
@@ -171,4 +171,3 @@ extension FocusEntity {
         }
     }
 }
-#endif

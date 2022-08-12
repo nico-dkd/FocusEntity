@@ -8,6 +8,7 @@
 
 import RealityKit
 
+@available(iOS 13.0, *)
 internal extension FocusEntity {
     /*
      The focus square consists of eight segments as follows, which can be individually animated.

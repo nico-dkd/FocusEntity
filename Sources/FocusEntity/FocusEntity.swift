@@ -11,16 +11,13 @@ import RealityKit
 import RealityFoundation
 #endif
 
-#if os(macOS) || targetEnvironment(simulator)
-#warning("FocusEntity: This package is only fully available with physical iOS devices")
-#endif
-
-#if canImport(ARKit) && !targetEnvironment(simulator)
 import ARKit
 import Combine
 
+@available(iOS 13.0, *)
 public protocol HasFocusEntity: Entity {}
 
+@available(iOS 13.0, *)
 public extension HasFocusEntity {
     var focus: FocusEntityComponent {
         get { self.components[FocusEntityComponent.self] ?? .classic }
@@ -40,6 +37,7 @@ public extension HasFocusEntity {
     }
 }
 
+@available(iOS 13.0, *)
 @objc public protocol FocusEntityDelegate {
     /// Called when the FocusEntity is now in world space
     @objc optional func toTrackingState()
@@ -51,6 +49,7 @@ public extension HasFocusEntity {
 /**
  An `Entity` which is used to provide uses with visual cues about the status of ARKit world tracking.
  */
+@available(iOS 13.0, *)
 open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
 
     public enum FEError: Error {
@@ -330,19 +329,20 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
         self.state = .tracking(raycastResult: result, camera: camera)
     }
 }
-#else
-/**
- FocusEntity is only enabled for environments which can import ARKit.
- */
-open class FocusEntity {
-    public convenience init(on arView: ARView, style: FocusEntityComponent.Style) {
-        self.init(on: arView, focus: FocusEntityComponent(style: style))
-    }
-    public convenience init(on arView: ARView, focus: FocusEntityComponent) {
-        self.init()
-    }
-    internal init() {
-        print("This is only supported on a physical iOS device.")
-    }
-}
-#endif
+//#else
+///**
+// FocusEntity is only enabled for environments which can import ARKit.
+// */
+//@available(iOS 13.0, *)
+//open class FocusEntity {
+//    public convenience init(on arView: ARView, style: FocusEntityComponent.Style) {
+//        self.init(on: arView, focus: FocusEntityComponent(style: style))
+//    }
+//    public convenience init(on arView: ARView, focus: FocusEntityComponent) {
+//        self.init()
+//    }
+//    internal init() {
+//        print("This is only supported on a physical iOS device.")
+//    }
+//}
+//#endif

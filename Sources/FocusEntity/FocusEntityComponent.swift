@@ -11,11 +11,13 @@ import RealityKit
 import ARKit
 #endif
 
+@available(iOS 13.0, *)
 internal struct ClassicStyle {
     var color: Material.Color
 }
 
 /// When using colored style, first material of a mesh will be replaced with the chosen color
+@available(iOS 13.0, *)
 internal struct ColoredStyle {
     /// Color when tracking the surface of a known plane
     var onColor: MaterialColorParameter
@@ -26,6 +28,7 @@ internal struct ColoredStyle {
     var mesh: MeshResource
 }
 
+@available(iOS 13.0, *)
 public struct FocusEntityComponent: Component {
     public enum Style {
         case classic(color: Material.Color)
