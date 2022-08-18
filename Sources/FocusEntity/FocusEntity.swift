@@ -46,6 +46,33 @@ public extension HasFocusEntity {
     @objc optional func toInitializingState()
 }
 
+@available(iOS 13.0, *)
+public enum FEAlignment {
+  case all, vertical, horizontal
+  
+  func planeAnchorAlignment() -> [ARPlaneAnchor.Alignment ] {
+    switch self {
+    case .all:
+      return [.vertical, .horizontal]
+    case .vertical:
+      return [.vertical]
+    case .horizontal:
+      return [.horizontal]
+    }
+  }
+  
+  func rayCastAlignment() -> ARRaycastQuery.TargetAlignment {
+    switch self {
+    case .all:
+      return .any
+    case .vertical:
+      return .vertical
+    case .horizontal:
+      return .horizontal
+    }
+  }
+}
+
 /**
  An `Entity` which is used to provide uses with visual cues about the status of ARKit world tracking.
  */
@@ -192,14 +219,18 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
             }
         }
     }
+  
+    /// Aligments for conversion between ARKit and RayTracing
+    public var allowedAllignments: FEAlignment
 
     // MARK: - Initialization
 
-    public convenience init(on arView: ARView, style: FocusEntityComponent.Style) {
-        self.init(on: arView, focus: FocusEntityComponent(style: style))
+    public convenience init(on arView: ARView, style: FocusEntityComponent.Style, allowedAllignments: FEAlignment) {
+        self.init(on: arView, focus: FocusEntityComponent(style: style), allowedAllignments: allowedAllignments)
     }
-    public required init(on arView: ARView, focus: FocusEntityComponent) {
+  public required init(on arView: ARView, focus: FocusEntityComponent, allowedAllignments: FEAlignment) {
         self.arView = arView
+        self.allowedAllignments = allowedAllignments
         super.init()
         self.focus = focus
         self.name = "FocusEntity"
@@ -329,20 +360,3 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
         self.state = .tracking(raycastResult: result, camera: camera)
     }
 }
-//#else
-///**
-// FocusEntity is only enabled for environments which can import ARKit.
-// */
-//@available(iOS 13.0, *)
-//open class FocusEntity {
-//    public convenience init(on arView: ARView, style: FocusEntityComponent.Style) {
-//        self.init(on: arView, focus: FocusEntityComponent(style: style))
-//    }
-//    public convenience init(on arView: ARView, focus: FocusEntityComponent) {
-//        self.init()
-//    }
-//    internal init() {
-//        print("This is only supported on a physical iOS device.")
-//    }
-//}
-//#endif

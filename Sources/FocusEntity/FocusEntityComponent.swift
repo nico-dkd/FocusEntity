@@ -34,7 +34,7 @@ public struct FocusEntityComponent: Component {
             onColor: MaterialColorParameter,
             offColor: MaterialColorParameter,
             nonTrackingColor: MaterialColorParameter,
-            mesh: MeshResource = MeshResource.generatePlane(width: 0.1, depth: 0.1)
+            mesh: MeshResource = MeshResource.generatePlane(width: 0.4, depth: 0.4)
         )
     }
 
