@@ -17,11 +17,13 @@ public extension FocusEntity {
             return
         }
         var endColor: MaterialColorParameter
-        if self.state == .initializing {
-            endColor = coloredStyle.nonTrackingColor
-        } else {
-            endColor = self.onPlane ? coloredStyle.onColor : coloredStyle.offColor
+        switch state {
+        case .initializing:
+          endColor = coloredStyle.nonTrackingColor
+        case .tracking(raycastResult: let raycastResult, camera: _):
+          endColor = self.onPlane && raycastResult.targetAlignment == allowedAllignments.rayCastAlignment() ? coloredStyle.onColor : coloredStyle.offColor
         }
+
         if self.fillPlane?.model?.materials.count == 0 {
             self.fillPlane?.model?.materials = [SimpleMaterial()]
         }

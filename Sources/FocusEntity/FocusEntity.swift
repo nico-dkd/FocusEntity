@@ -44,13 +44,19 @@ public extension HasFocusEntity {
 
     /// Called when the FocusEntity is tracking the camera
     @objc optional func toInitializingState()
+  
+    /// Called when the Raycast changes alignment
+    @objc optional func alignmentChanged(alignment: FEAlignment)
 }
 
 @available(iOS 13.0, *)
-public enum FEAlignment {
-  case all, vertical, horizontal
+@objc public enum FEAlignment: Int {
+  case none
+  case vertical
+  case horizontal
+  case all
   
-  func planeAnchorAlignment() -> [ARPlaneAnchor.Alignment ] {
+  public func planeAnchorAlignment() -> [ARPlaneAnchor.Alignment] {
     switch self {
     case .all:
       return [.vertical, .horizontal]
@@ -58,10 +64,12 @@ public enum FEAlignment {
       return [.vertical]
     case .horizontal:
       return [.horizontal]
+    case .none:
+      return []
     }
   }
   
-  func rayCastAlignment() -> ARRaycastQuery.TargetAlignment {
+  public func rayCastAlignment() -> ARRaycastQuery.TargetAlignment? {
     switch self {
     case .all:
       return .any
@@ -69,8 +77,25 @@ public enum FEAlignment {
       return .vertical
     case .horizontal:
       return .horizontal
+    case .none:
+      return nil
     }
   }
+  
+  internal static func rayCastAlignmentToFEAlignment(alignment: ARRaycastQuery.TargetAlignment) -> FEAlignment {
+    switch alignment {
+      
+    case .horizontal:
+      return .horizontal
+    case .vertical:
+      return .vertical
+    case .any:
+      return .all
+    @unknown default:
+      return .none
+    }
+  }
+  
 }
 
 /**
@@ -176,6 +201,7 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
                 }
                 if stateChanged {
                     self.delegate?.toTrackingState?()
+                    delegate?.alignmentChanged?(alignment: FEAlignment.rayCastAlignmentToFEAlignment(alignment:   raycastResult.targetAlignment))
                 }
             }
         }
@@ -223,6 +249,8 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
     /// Aligments for conversion between ARKit and RayTracing
     public var allowedAllignments: FEAlignment
 
+    public var currentRayCastAlignment: ARRaycastQuery.TargetAlignment?
+  
     // MARK: - Initialization
 
     public convenience init(on arView: ARView, style: FocusEntityComponent.Style, allowedAllignments: FEAlignment) {
@@ -354,6 +382,7 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
             // We should place the focus entity in front of the camera instead of on a plane.
             putInFrontOfCamera()
             self.state = .initializing
+            delegate?.alignmentChanged?(alignment: .none)
             return
         }
 

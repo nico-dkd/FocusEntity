@@ -89,6 +89,14 @@ extension FocusEntity {
         } else {
             orientation = targetAlignment
         }
+      
+        // Check because it could be called for each frame
+        if currentRayCastAlignment != raycastResult.targetAlignment {
+          // Set new ray cast alignment
+          currentRayCastAlignment = raycastResult.targetAlignment
+          // Call delegate
+          delegate?.alignmentChanged?(alignment: FEAlignment.rayCastAlignmentToFEAlignment(alignment: raycastResult.targetAlignment))
+        }
     }
 
     internal func normalize(_ angle: Float, forMinimalRotationTo ref: Float) -> Float {
@@ -121,7 +129,7 @@ extension FocusEntity {
         }
         let rcQuery = ARRaycastQuery(
             origin: camPos, direction: camDir,
-            allowing: self.allowedRaycast, alignment: allowedAllignments.rayCastAlignment()
+            allowing: self.allowedRaycast, alignment: .any
         )
         let results = self.arView?.session.raycast(rcQuery) ?? []
 
